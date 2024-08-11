@@ -7,7 +7,19 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = new sqlite3.Database('links.db');
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configuração do banco de dados
+const db = new sqlite3.Database('./links.db', (err) => {
+    if (err) {
+        console.error('Erro ao conectar ao banco de dados:', err.message);
+    } else {
+        console.log('Conectado ao banco de dados SQLite.');
+    }
+});
 
 // Criar a tabela 'links' se ela não existir
 db.serialize(() => {
@@ -26,11 +38,6 @@ db.serialize(() => {
         }
     });
 });
-
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Servir a página HTML
 app.get('/', (req, res) => {
@@ -93,4 +100,4 @@ app.get('/:shortId', (req, res) => {
 
 app.listen(3000, () => {
     console.log('Servidor rodando em http://localhost:3000');
-}); 
+});
