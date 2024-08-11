@@ -28,6 +28,8 @@ db.serialize(() => {
 });
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const BASE_URL = 'https://url-shortener-rho-two.vercel.app'; // URL do Vercel
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -61,7 +63,7 @@ app.post('/shorten', (req, res) => {
             if (err) {
                 return res.status(500).json({ error: 'Falha ao criar o link encurtado' });
             }
-            res.send(`Seu link encurtado: <a href="/${shortId}">http://localhost:3000/${shortId}</a>`);
+            res.send(`Seu link encurtado: <a href="${BASE_URL}/${shortId}">${BASE_URL}/${shortId}</a>`);
         });
         stmt.finalize();
     });
@@ -84,6 +86,6 @@ app.get('/:shortId', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Servidor rodando em http://localhost:3000');
+app.listen(PORT, () => {
+    console.log(`Servidor rodando em ${BASE_URL}`);
 });
