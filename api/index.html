@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encurtador de Links</title>
+</head>
+<body>
+    <h1>Encurtador de Links</h1>
+    <form action="/api/shorten" method="POST">
+        <label for="originalUrl">URL Original:</label>
+        <input type="text" id="originalUrl" name="originalUrl" required>
+        <br>
+        <label for="customShortId">Nome Personalizado (opcional):</label>
+        <input type="text" id="customShortId" name="customShortId">
+        <br>
+        <button type="submit">Encurtar URL</button>
+    </form>
+</body>
+</html>
