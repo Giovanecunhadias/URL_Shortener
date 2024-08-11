@@ -28,8 +28,6 @@ db.serialize(() => {
 });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const BASE_URL = 'https://url-shortener-rho-two.vercel.app'; // URL do Vercel
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,8 +39,11 @@ app.get('/', (req, res) => {
 
 // Rota para criar um link encurtado
 app.post('/shorten', (req, res) => {
+    console.log('Recebido um pedido para /shorten');
     const { originalUrl, customShortId } = req.body;
     let shortId = customShortId ? customShortId.trim() : nanoid(7); // Usar ID personalizado ou gerar um novo
+
+    console.log(`Encurtando URL: ${originalUrl} com ID: ${shortId}`);
 
     // Verificar se o nome personalizado é válido
     if (shortId.length < 1 || shortId.length > 20) {
@@ -52,6 +53,7 @@ app.post('/shorten', (req, res) => {
     // Verificar se o nome personalizado já está em uso
     db.get('SELECT * FROM links WHERE shortId = ?', [shortId], (err, row) => {
         if (err) {
+            console.error('Erro ao verificar o nome personalizado:', err.message);
             return res.status(500).json({ error: 'Falha ao verificar o nome personalizado' });
         }
         if (row) {
@@ -61,6 +63,7 @@ app.post('/shorten', (req, res) => {
         const stmt = db.prepare('INSERT INTO links (shortId, originalUrl) VALUES (?, ?)');
         stmt.run(shortId, originalUrl, function(err) {
             if (err) {
+                console.error('Erro ao criar o link encurtado:', err.message);
                 return res.status(500).json({ error: 'Falha ao criar o link encurtado' });
             }
             res.send(`Seu link encurtado: <a href="${BASE_URL}/${shortId}">${BASE_URL}/${shortId}</a>`);
@@ -71,10 +74,12 @@ app.post('/shorten', (req, res) => {
 
 // Rota para redirecionar
 app.get('/:shortId', (req, res) => {
+    console.log('Recebido um pedido para redirecionar');
     const { shortId } = req.params;
     
     db.get('SELECT * FROM links WHERE shortId = ?', [shortId], (err, row) => {
         if (err) {
+            console.error('Erro ao recuperar o link:', err.message);
             return res.status(500).json({ error: 'Falha ao recuperar o link' });
         }
         if (row) {
@@ -86,6 +91,6 @@ app.get('/:shortId', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em ${BASE_URL}`);
-});
+app.listen(3000, () => {
+    console.log('Servidor rodando em http://localhost:3000');
+}); 
