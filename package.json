@@ -1,0 +1,17 @@
+{
+  "name": "meu-encurtador",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module", 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2",
+    "nanoid": "^4.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
